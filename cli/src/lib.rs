@@ -299,25 +299,7 @@ pub enum Command {
     Login {
         /// API access token.
         token: String,
-    },
-    /// Publishes a verified build to the Anchor registry.
-    Publish {
-        /// The name of the program to publish.
-        program: String,
-        /// Environment variables to pass into the docker container
-        #[clap(short, long, required = false)]
-        env: Vec<String>,
-        /// Arguments to pass to the underlying `cargo build-sbf` command.
-        #[clap(required = false, last = true)]
-        cargo_args: Vec<String>,
-        /// Flag to skip building the program in the workspace,
-        /// use this to save time when publishing the program
-        #[clap(long)]
-        skip_build: bool,
-        /// Architecture to use when building the program
-        #[clap(value_enum, long, default_value = "sbf")]
-        arch: ProgramArch,
-    },
+    },   
     /// Program keypair commands.
     Keys {
         #[clap(subcommand)]
@@ -886,21 +868,7 @@ fn process_command(opts: Opts) -> Result<()> {
             script,
             script_args,
         } => run(&opts.cfg_override, script, script_args),
-        Command::Login { token } => login(&opts.cfg_override, token),
-        Command::Publish {
-            program,
-            env,
-            cargo_args,
-            skip_build,
-            arch,
-        } => publish(
-            &opts.cfg_override,
-            program,
-            env,
-            cargo_args,
-            skip_build,
-            arch,
-        ),
+        Command::Login { token } => login(&opts.cfg_override, token)
         Command::Keys { subcmd } => keys(&opts.cfg_override, subcmd),
         Command::Localnet {
             skip_build,
